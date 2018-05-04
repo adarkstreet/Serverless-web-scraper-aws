@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.232.1",
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.1"
+  }
+}

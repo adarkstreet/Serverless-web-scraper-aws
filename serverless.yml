@@ -3,7 +3,43 @@ service: donkeyjob
 provider:
   name: aws
   runtime: nodejs6.10
-
 functions:
-  hello:
-    handler: handler.hello
+  getdonkeyjobs:
+    handler: handler.getdonkeyjobs
+
+resources:
+  Resources:
+    donkeyjobs:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: donkeyjobs
+        AttributeDefinitions:
+          - AttributeName: listingId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: listingId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    DynamoDBIamPolicy: 
+      Type: AWS::IAM::Policy
+      DependsOn: donkeyjobs
+      Properties:
+        PolicyName: lambda-dynamodb
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:DescribeTable
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+              Resource: arn:aws:dynamodb:*:*:table/donkeyjobs
+        Roles:
+          - Ref: IamRoleLambdaExecution
